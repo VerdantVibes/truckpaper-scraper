@@ -2,16 +2,29 @@ import json
 import csv
 import glob
 import os
+import re
 from typing import List, Dict
 
 def extract_specs(specs: List[Dict]) -> Dict[str, str]:
     """Extract specs into a dictionary format"""
     return {spec['Key']: spec['Value'] for spec in specs}
 
+def extract_horsepower(description: str) -> str:
+    """Extract horsepower from description"""
+    if not description:  # Handle None or empty string case
+        return ''
+        
+    # Pattern to match: number before hp/HP
+    match = re.search(r'(\d+)\s*[hH][pP]', description)
+    if match:
+        return match.group(1)
+    return ''
+
 def process_listing(listing: Dict) -> Dict:
     """Process a single listing to extract required fields"""
     specs = extract_specs(listing.get('Specs', []))
     location = listing.get('ListingLocation', {})
+    description = listing.get('Description', '')
     
     return {
         'Category': listing.get('DisplayCategoryName', ''),
@@ -23,7 +36,8 @@ def process_listing(listing: Dict) -> Dict:
         'State': location.get('State', ''),
         'Country': location.get('Country', ''),
         'PostalCode': location.get('PostalCode', ''),
-        'Description': listing.get('Description', ''),
+        'Description': description,
+        'Horsepower': extract_horsepower(description),
         'Price': listing.get('Price', ''),
         'PaymentsAsLowAs': listing.get('Widgets', {}).get('PaymentsAsLowAs', ''),
         'UpdatedOn': listing.get('FormattedUpdatedOnTime', ''),
