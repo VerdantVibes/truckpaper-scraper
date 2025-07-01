@@ -64,7 +64,6 @@ def log_failed_url(url: str, sequence: int, error: str):
 
 def get_html_content(url: str, sequence: int) -> bool:
     """Download HTML content for a given URL"""
-    
     headers = {
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
         'accept-language': 'en-US,en;q=0.9',
@@ -84,12 +83,12 @@ def get_html_content(url: str, sequence: int) -> bool:
     cookies = {
         'sandhills-consent': '{"StrictlyNecessary":true,"Customization":false,"Advertising":false,"Analytics":false,"ShouldResync":true,"ActionDateTime":"2025-06-20T09:24:41.803Z","ConsentStatus":"DENY","WebAgreementID":165}',
         'UserSettingsCookie': 'screenSize=1920|919',
-        'UserID': 'ID=iiK%2fxlgqP0TtdwXUzhvhosgINh9yxpoThbivahn8catRQeov6QqXntOmSxpoTdKsY92RYeD5WeNKpZt8ZhtABg%3d%3d&LV=nLFEqqhaVBv0s60ScMhBgC%2b%2fmpIM4S7cctxmxPdGO%2fic0%2fysrha%2f5JRf84CeloGTQZWqRTsZDl3QEq9qaQWX2fYXPObXyi2n',
         '__RequestVerificationToken': 'QWVGlkJD84vwUrNJOQDs5aJEo8A5jXAj8ymQLcC31YBXskmL4LW96uVpO_ZScIOcD0pVYw2',
         '__XSRF-TOKEN': 'cK_9VRf4zTQ1jdk5jVcqFbTBM3_ShYDvJ4s4hhQowRLiBVs9RHFdBRPkSLiHJxzjvPj67_cIXPa2zieR8MKmlWTQZobBD0G1SQ9HybMkq6h-SmWsWWIKReHA_C7tZd83MqrHxm_l5X_V6RBJ6kvgE2zEUs7bMi1mk-v-iA2',
-        'reese84': '3:GdtFQpsy4rGvISrsEQ161w==:4RV5/I7AZljbyL0S4R4iIogjM5ECBVd3sNHVrkAiUFzhrIToobNLdJMpLfEdZVP9r/hius+MOAGdiyilx1UeoZMHwJLijKty98DsqanLY1OQ6LEnJA0wZ434LkhDBibiuXcLb6BAwia/RLcAi0qbXfnA/aIabn9pIEB5MBfBn7FBY2zB+YafIO0IWJdRYykEAaPPck49mJTa89udugVghSjdhjlGjmJX64YPmruzTszA1DuhTQn0YYV+QjMP+E4mwjiUTgV3lrNvmv5RGUCyarteipEIJKzCGbO/A0QsHJefVZ31DZZKBeecG1Lw6azLnwFnIoDQoILPiF+tRtiTXUqP9RrVFD3RIw2lQSOB3vJ6SUkDJerlVkxB1q6Jj/OEExigo0NE2iB8FeoAmlQjTPvIMyW7w5me0m4OTyVoY/fscApSsB/eTaqgEq/OsxOYW5/Jcaz4KlEjHn41gXq1QWm2dYVOgwp4T0vCf2UfTDruWhh0/w2YfoNCnEgX2pug:Ts6v3R1h8GpJWZNK0O7XaPLM1VEsg8dJfsiLSo0z1ak=',
         'ASP.NET_SessionId': 'in3p33xiqhbv315vck0bwyy5',
-        'BIGipServerwww.truckpaper.tradesites_http_pool': '742566080.20480.0000'
+        'BIGipServerwww.truckpaper.tradesites_http_pool': '92383424.20480.0000',
+        'reese84': '3:W5mpXQmCB92prLcfP7ALzA==:EhfWNipEO5fmtRVI6eQ8gSIVJsOWwfO9fMRLwrwxGdSrqBx1G+dmKzAWztZ4HfiD/I/8CX/ddbfq0UsLUhbDbUXk5nxVNML3fs713a9mnrUmNFFhAwYcd0PhXecjM4HLEp28Nz7O/sdXmzxUkGIgSa3mwYyz8bNi8zXzWxN5rqKMpL5Wo887S31uhULcR3YfDcY+YFWS3tVTc1w4jlcf8Wh/vqOLnmR/7vauZiZjrONialCBRVp7JTle4CFIhB1ErKAUBTpqrX2BFw9fK8f+6H0XiQ69I0g1RzkNHWeCg4VNuyT3GraVjdr5Fx91UUicpHwWsr8vILC8ZpQ3HTOBFkIniasU24Ts4nmJGgCtrCoOMjCKQEg4M5XpUZ16Kr9A4FGbO6a65qdXxhLGFVobnraLdy1p0WQwPMWwZfx6HKpThkZY9aK4k6nPEwyihI5XbqWo+AdmDaZwYSXe2HkayU/Vs+KJA2y4kWW+fAU0ExDTLY+ejX84YOKcnGt6XqJVtdZJeC72GBfwnNNYlK1uFQ==:SYp6+j6Ak/0JebpDuNZUtSkoMfgjiiqN86NC+43OZUk=',
+        'UserID': 'ID=iiK%2fxlgqP0TtdwXUzhvhosgINh9yxpoThbivahn8catRQeov6QqXntOmSxpoTdKsY92RYeD5WeNKpZt8ZhtABg%3d%3d&LV=nLFEqqhaVBvbshYbyhE8Ucxa6vS%2flXuhrTS5GoPxxq7eZdjiDbHkdarQA4cqJ1uSqF%2fVfD0aLvuNUOsGLV2dGfVyFDscsZm8'
     }
 
     try:
