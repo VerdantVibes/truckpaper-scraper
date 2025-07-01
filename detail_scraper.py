@@ -87,7 +87,12 @@ def get_html_content(url: str, sequence: int) -> bool:
         
         response = requests.get(url, headers=headers, cookies=cookies)
         response.raise_for_status()
-        
+
+        # Check for "Pardon Our Interruption" page
+        if "Pardon Our Interruption" in response.text:
+            print("Detected 'Pardon Our Interruption' page. Access might be blocked.")
+            return False
+
         # Save HTML content
         filename = f'html_files/listing_{sequence}.html'
         with open(filename, 'w', encoding='utf-8') as f:
@@ -112,8 +117,8 @@ def process_url_by_sequence(sequence: int, urls: List[str]):
         if get_html_content(url, current_num):
             time.sleep(2)  # Add delay between successful requests
         else:
-            print(f"Failed to process URL {current_num}, continuing to next...")
-            time.sleep(5)  # Longer delay after failure
+            print(f"Failed to process URL {current_num}. Stopping process...")
+            return  # Stop processing on first failure
 
 def main():
     # First, collect all URLs if they haven't been collected yet
@@ -141,6 +146,7 @@ def main():
         
         # Process URLs sequentially from the starting sequence
         process_url_by_sequence(sequence, urls)
+        print("Process completed.")
         
     except Exception as e:
         print(f"Error: {e}")
