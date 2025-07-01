@@ -52,8 +52,19 @@ def collect_detail_urls() -> List[str]:
     print(f"Saved {len(urls)} URLs to detail_urls.csv")
     return urls
 
+def log_failed_url(url: str, sequence: int, error: str):
+    """Log failed URLs to a CSV file"""
+    file_exists = os.path.exists('failed_urls.csv')
+    
+    with open('failed_urls.csv', 'a', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        if not file_exists:
+            writer.writerow(['Sequence', 'URL', 'Error'])
+        writer.writerow([sequence, url, error])
+
 def get_html_content(url: str, sequence: int) -> bool:
     """Download HTML content for a given URL"""
+    
     headers = {
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
         'accept-language': 'en-US,en;q=0.9',
@@ -73,12 +84,12 @@ def get_html_content(url: str, sequence: int) -> bool:
     cookies = {
         'sandhills-consent': '{"StrictlyNecessary":true,"Customization":false,"Advertising":false,"Analytics":false,"ShouldResync":true,"ActionDateTime":"2025-06-20T09:24:41.803Z","ConsentStatus":"DENY","WebAgreementID":165}',
         'UserSettingsCookie': 'screenSize=1920|919',
-        '__RequestVerificationToken': 'QwmNWUhiDZ8egYKvx1JHLhd9tuJvsJbHAzeiAMCQqCBiI80VR81NGIdN1KMRpz5gtbXkLQ2',
-        '__XSRF-TOKEN': 'F8D2h-7GvHLKFbrH-ALlm68k_hPqd4iAVHTsOPIUD_NEwfvvDe5_wMMyghPD2YlDyAZwmng47bZVwen6wKtACOn24xryrE9VB91n5JLfp9153rUs-BCoO29YhprLEbYSpLufnBkpWcHIrg1Zc7bMgshnFvUkvMAjDnxvjQ2',
-        'ASP.NET_SessionId': 'b0vyfgbod2tiqzqzfqdbaliu',
-        'BIGipServerwww.truckpaper.tradesites_http_pool': '1820502208.20480.0000',
-        'reese84': '3:iAm/99UiMmlfshXmsgCreA==:ob55eymgUeRd+tbSjXEY5dMHVrTCyFpyX/T0Zi7zn2ZoB3MW1+vGbwy9YTOzQsEIoob1+eYBmaYeIPkim6EnQyotxkPVdtpzklp8GubDooFwZXQp0NICafbC3iXJPjGU4AVZNbAvkaEUM+iWX/p6VzPI+KIMxO/BVJdvMPMWfBAYPQaZALQkJnwVUoJiUkKt6CIAEWyY5aeMljerbiHakFIXud5qcYr97CCPMUitDhGNx2bY43jxPM/y+Do+Vp7VBNByQ7Km2da0nn+1EbVTGIesQupfDBHdnlDmARFyszruQYnx9kDhbB34HJOlw+fPZuuB1xaD+j80BF/M/ISKD1xJboYegEe889Sb5AG/EXAY0wkeldn8JM3HiowuEY1epNDvWQERkd4WF8eXFAFaGwkWoUmhw6dm0ZJg+MSHMrSf1X/cvS6VCa/puhkD96Hp8yTcGNbmy8GIrSCGjwEiEPweoa143kKJ5qUUw0dUmRB1EC/V9BLjzVVIW/q4xAi8jyY1xgRsA7j600pDB34Ztg==:x2lW3gGD6Zhxyjh/BUvyWbxDlgiYfAAVsl9NPiTvyDo=',
-        'UserID': 'ID=iiK%2fxlgqP0TtdwXUzhvhosgINh9yxpoThbivahn8catRQeov6QqXntOmSxpoTdKsY92RYeD5WeNKpZt8ZhtABg%3d%3d&LV=nLFEqqhaVBsEgI1Gf%2fPnTwR89tiVAwD283Mu54DepbU8Jp1lchu6QZWnmNlj5VLnLQ9GNjXE4zSRfklHGLcvyAiS571Ktueb'
+        'UserID': 'ID=iiK%2fxlgqP0TtdwXUzhvhosgINh9yxpoThbivahn8catRQeov6QqXntOmSxpoTdKsY92RYeD5WeNKpZt8ZhtABg%3d%3d&LV=nLFEqqhaVBv0s60ScMhBgC%2b%2fmpIM4S7cctxmxPdGO%2fic0%2fysrha%2f5JRf84CeloGTQZWqRTsZDl3QEq9qaQWX2fYXPObXyi2n',
+        '__RequestVerificationToken': 'QWVGlkJD84vwUrNJOQDs5aJEo8A5jXAj8ymQLcC31YBXskmL4LW96uVpO_ZScIOcD0pVYw2',
+        '__XSRF-TOKEN': 'cK_9VRf4zTQ1jdk5jVcqFbTBM3_ShYDvJ4s4hhQowRLiBVs9RHFdBRPkSLiHJxzjvPj67_cIXPa2zieR8MKmlWTQZobBD0G1SQ9HybMkq6h-SmWsWWIKReHA_C7tZd83MqrHxm_l5X_V6RBJ6kvgE2zEUs7bMi1mk-v-iA2',
+        'reese84': '3:GdtFQpsy4rGvISrsEQ161w==:4RV5/I7AZljbyL0S4R4iIogjM5ECBVd3sNHVrkAiUFzhrIToobNLdJMpLfEdZVP9r/hius+MOAGdiyilx1UeoZMHwJLijKty98DsqanLY1OQ6LEnJA0wZ434LkhDBibiuXcLb6BAwia/RLcAi0qbXfnA/aIabn9pIEB5MBfBn7FBY2zB+YafIO0IWJdRYykEAaPPck49mJTa89udugVghSjdhjlGjmJX64YPmruzTszA1DuhTQn0YYV+QjMP+E4mwjiUTgV3lrNvmv5RGUCyarteipEIJKzCGbO/A0QsHJefVZ31DZZKBeecG1Lw6azLnwFnIoDQoILPiF+tRtiTXUqP9RrVFD3RIw2lQSOB3vJ6SUkDJerlVkxB1q6Jj/OEExigo0NE2iB8FeoAmlQjTPvIMyW7w5me0m4OTyVoY/fscApSsB/eTaqgEq/OsxOYW5/Jcaz4KlEjHn41gXq1QWm2dYVOgwp4T0vCf2UfTDruWhh0/w2YfoNCnEgX2pug:Ts6v3R1h8GpJWZNK0O7XaPLM1VEsg8dJfsiLSo0z1ak=',
+        'ASP.NET_SessionId': 'in3p33xiqhbv315vck0bwyy5',
+        'BIGipServerwww.truckpaper.tradesites_http_pool': '742566080.20480.0000'
     }
 
     try:
@@ -86,13 +97,20 @@ def get_html_content(url: str, sequence: int) -> bool:
         os.makedirs('html_files', exist_ok=True)
         
         response = requests.get(url, headers=headers, cookies=cookies)
+        
+        # Handle 404 errors separately
+        if response.status_code == 404:
+            print(f"URL not found (404): {url}")
+            log_failed_url(url, sequence, "404 Not Found")
+            return None  # Return None for 404 errors
+            
         response.raise_for_status()
-
+        
         # Check for "Pardon Our Interruption" page
         if "Pardon Our Interruption" in response.text:
             print("Detected 'Pardon Our Interruption' page. Access might be blocked.")
             return False
-
+        
         # Save HTML content
         filename = f'html_files/listing_{sequence}.html'
         with open(filename, 'w', encoding='utf-8') as f:
@@ -101,9 +119,12 @@ def get_html_content(url: str, sequence: int) -> bool:
         print(f"Successfully saved {filename}")
         return True
         
-    except Exception as e:
+    except requests.exceptions.RequestException as e:
         print(f"Error downloading {url}: {e}")
-        return False
+        if not isinstance(e, requests.exceptions.HTTPError) or e.response.status_code != 404:
+            return False  # Stop process for non-404 errors
+        log_failed_url(url, sequence, str(e))
+        return None  # Continue process for 404 errors
 
 def process_url_by_sequence(sequence: int, urls: List[str]):
     """Process URL by sequence number and continue sequentially"""
@@ -114,11 +135,13 @@ def process_url_by_sequence(sequence: int, urls: List[str]):
         url = urls[current_seq]
         print(f"Processing URL {current_num} of {total_urls}: {url}")
         
-        if get_html_content(url, current_num):
-            time.sleep(2)  # Add delay between successful requests
-        else:
+        result = get_html_content(url, current_num)
+        if result is False:  # Stop on errors except 404
             print(f"Failed to process URL {current_num}. Stopping process...")
-            return  # Stop processing on first failure
+            return
+        elif result is True:  # Successful download
+            time.sleep(2)  # Add delay between successful requests
+        # If result is None (404 error), continue to next URL
 
 def main():
     # First, collect all URLs if they haven't been collected yet
