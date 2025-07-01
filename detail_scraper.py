@@ -80,22 +80,25 @@ def get_html_content(url: str, sequence: int) -> bool:
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36'
     }
 
-    cookies = {
-        'sandhills-consent': '{"StrictlyNecessary":true,"Customization":false,"Advertising":false,"Analytics":false,"ShouldResync":true,"ActionDateTime":"2025-06-20T09:24:41.803Z","ConsentStatus":"DENY","WebAgreementID":165}',
-        'UserSettingsCookie': 'screenSize=1920|919',
-        '__RequestVerificationToken': 'QWVGlkJD84vwUrNJOQDs5aJEo8A5jXAj8ymQLcC31YBXskmL4LW96uVpO_ZScIOcD0pVYw2',
-        '__XSRF-TOKEN': 'cK_9VRf4zTQ1jdk5jVcqFbTBM3_ShYDvJ4s4hhQowRLiBVs9RHFdBRPkSLiHJxzjvPj67_cIXPa2zieR8MKmlWTQZobBD0G1SQ9HybMkq6h-SmWsWWIKReHA_C7tZd83MqrHxm_l5X_V6RBJ6kvgE2zEUs7bMi1mk-v-iA2',
-        'ASP.NET_SessionId': 'in3p33xiqhbv315vck0bwyy5',
-        'BIGipServerwww.truckpaper.tradesites_http_pool': '92383424.20480.0000',
-        'reese84': '3:W5mpXQmCB92prLcfP7ALzA==:EhfWNipEO5fmtRVI6eQ8gSIVJsOWwfO9fMRLwrwxGdSrqBx1G+dmKzAWztZ4HfiD/I/8CX/ddbfq0UsLUhbDbUXk5nxVNML3fs713a9mnrUmNFFhAwYcd0PhXecjM4HLEp28Nz7O/sdXmzxUkGIgSa3mwYyz8bNi8zXzWxN5rqKMpL5Wo887S31uhULcR3YfDcY+YFWS3tVTc1w4jlcf8Wh/vqOLnmR/7vauZiZjrONialCBRVp7JTle4CFIhB1ErKAUBTpqrX2BFw9fK8f+6H0XiQ69I0g1RzkNHWeCg4VNuyT3GraVjdr5Fx91UUicpHwWsr8vILC8ZpQ3HTOBFkIniasU24Ts4nmJGgCtrCoOMjCKQEg4M5XpUZ16Kr9A4FGbO6a65qdXxhLGFVobnraLdy1p0WQwPMWwZfx6HKpThkZY9aK4k6nPEwyihI5XbqWo+AdmDaZwYSXe2HkayU/Vs+KJA2y4kWW+fAU0ExDTLY+ejX84YOKcnGt6XqJVtdZJeC72GBfwnNNYlK1uFQ==:SYp6+j6Ak/0JebpDuNZUtSkoMfgjiiqN86NC+43OZUk=',
-        'UserID': 'ID=iiK%2fxlgqP0TtdwXUzhvhosgINh9yxpoThbivahn8catRQeov6QqXntOmSxpoTdKsY92RYeD5WeNKpZt8ZhtABg%3d%3d&LV=nLFEqqhaVBvbshYbyhE8Ucxa6vS%2flXuhrTS5GoPxxq7eZdjiDbHkdarQA4cqJ1uSqF%2fVfD0aLvuNUOsGLV2dGfVyFDscsZm8'
-    }
+    # Function to parse cookie string into dictionary
+    def parse_cookies(cookie_str):
+        cookies = {}
+        pairs = cookie_str.split(';')
+        for pair in pairs:
+            if '=' in pair:
+                key, value = pair.split('=', 1)
+                cookies[key.strip()] = value.strip()
+        return cookies
+
+    # Raw cookie string - you can update this as needed
+    cookie_str = 'sandhills-consent={"StrictlyNecessary":true,"Customization":false,"Advertising":false,"Analytics":false,"ShouldResync":true,"ActionDateTime":"2025-06-20T09:24:41.803Z","ConsentStatus":"DENY","WebAgreementID":165}; UserSettingsCookie=screenSize=1920|919; __RequestVerificationToken=QWVGlkJD84vwUrNJOQDs5aJEo8A5jXAj8ymQLcC31YBXskmL4LW96uVpO_ZScIOcD0pVYw2; __XSRF-TOKEN=cK_9VRf4zTQ1jdk5jVcqFbTBM3_ShYDvJ4s4hhQowRLiBVs9RHFdBRPkSLiHJxzjvPj67_cIXPa2zieR8MKmlWTQZobBD0G1SQ9HybMkq6h-SmWsWWIKReHA_C7tZd83MqrHxm_l5X_V6RBJ6kvgE2zEUs7bMi1mk-v-iA2; ASP.NET_SessionId=in3p33xiqhbv315vck0bwyy5; reese84=3:uPon8ef+Ksc7ZxK/L7rVjA==:Njo5jYcajR3MMMrwVY21pB04/hJMLqEaq3oYXBoYA40SBs0feXf6+AKLrYYDGcw9epiKdYlZQqE0o1WVIPSfz0FF/cFtuf9cGkvuR+/RgtNQDWOZSH9O8TIXze0d/CyNt/7GK9VB2l+o6douWRpI2doTSLxs1KMaHjaRchuHJEBa+9vCz2mpeqx6BJ12Aqpg5cFp14oT3V83dKBBVBXL6UlcAeA8PlnpmlrorqzYyTdVDvi8BCXmAG6pwWBxaD+jd7jVrOx8jcaRB+NBhwNKeqHcMY93qOJ2i/X/nc77dDbbs55zvRdwtZwrYWiJAh4JsVZtRYTnwDHevtlPBvdYAxBxMJTbRyiHPUdRg7JmulSF7+vKd2w9b5WoE4M9mhjPbvRof6Bk5LrrHTksert8asVXg1yOX/fJH/rdFAlAsem8mheiOOIOSVtzH6MF9upRfZyvxZf2N7iqguglqZxI8/pRp2mXW70Te6QDI9sgrECMPU3pRjKJ9sLcqEkDvOLTrrvmWg5VrkFBhWmjzpdrag==:T3oitLYq6Uen95BhWBfcy1r1An9yh8/meF1BwLi00CM=; UserID=ID=iiK%2fxlgqP0TtdwXUzhvhosgINh9yxpoThbivahn8catRQeov6QqXntOmSxpoTdKsY92RYeD5WeNKpZt8ZhtABg%3d%3d&LV=nLFEqqhaVBsrqqsUtE4emOO3dPM8wF0hL4QhixdUAyArcuFYZEVfMnAsJtaH87eHYjZm4uX59jcIoRZzeJ6%2fqM0%2bze5AHUUN; BIGipServerwww.truckpaper.tradesites_http_pool=1820502208.20480.0000'
 
     try:
         # Create html_files directory if it doesn't exist
         os.makedirs('html_files', exist_ok=True)
         
-        response = requests.get(url, headers=headers, cookies=cookies)
+        # Use the raw cookie string directly in the request
+        response = requests.get(url, headers=headers, cookies=parse_cookies(cookie_str))
         
         # Handle 404 errors separately
         if response.status_code == 404:
