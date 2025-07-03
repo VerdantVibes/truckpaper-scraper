@@ -73,10 +73,15 @@ def process_listing(listing: Dict, row_number: int) -> Dict:
     hp = extract_horsepower(description)
     engine_hp = specs.get('Engine HP', hp) if specs.get('Engine HP') else hp
     
-    # Get odometer and fuel type using row number as listing ID
+    # Get values from HTML file
     listing_id = str(row_number)
-    odometer = get_odometer_from_html(listing_id)
+    html_odometer = get_odometer_from_html(listing_id)
     engine_type = get_fuel_type_from_html(listing_id)
+    
+    # Check both JSON specs and HTML for odometer
+    json_odometer = specs.get('Odometer', '')
+    # Use HTML odometer if available, otherwise use JSON odometer
+    odometer = html_odometer if html_odometer else json_odometer
     
     return {
         'Category': listing.get('DisplayCategoryName', ''),
