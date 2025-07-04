@@ -63,6 +63,17 @@ def get_fuel_type_from_html(listing_id: str) -> str:
         print(f"Error reading fuel type from HTML for listing {listing_id}: {e}")
     return ''
 
+def extract_mileage_number(mileage_value: str) -> str:
+    """Extract numeric value from mileage string (e.g., '285,240 mi' -> '285240')"""
+    if not mileage_value:
+        return ''
+    
+    # Remove commas and extract numbers only
+    numbers = re.findall(r'\d+', mileage_value.replace(',', ''))
+    if numbers:
+        return ''.join(numbers)
+    return ''
+
 def process_listing(listing: Dict, row_number: int) -> Dict:
     """Process a single listing to extract required fields"""
     specs = extract_specs(listing.get('Specs', []))
@@ -83,10 +94,15 @@ def process_listing(listing: Dict, row_number: int) -> Dict:
     # Use HTML odometer if available, otherwise use JSON odometer
     odometer = html_odometer if html_odometer else json_odometer
     
+    # Extract mileage number from specs
+    mileage_raw = specs.get('Mileage', '')
+    mileage = extract_mileage_number(mileage_raw)
+    
     return {
         'Category': listing.get('DisplayCategoryName', ''),
         'Price': listing.get('Price', ''),
         'Odometer': odometer,
+        'Mileage': mileage,
         'Type': listing.get('DisplayCategoryName', ''),
         'Year': listing.get('Year', ''),
         'Model': listing.get('Model', ''),
