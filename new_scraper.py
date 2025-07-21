@@ -12,15 +12,15 @@ def get_listings(page: int = 1) -> Optional[Dict]:
         'accept-language': 'en-US,en;q=0.9',
         'content-type': 'application/json',
         'priority': 'u=1, i',
-        'referer': 'https://www.truckpaper.com/listings/search?ListingType=For%20Retail&page=357',
-        'sec-ch-ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"',
+        'referer': 'https://www.truckpaper.com/listings/search?ListingType=For%20Retail',
+        'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"',
         'sec-ch-ua-mobile': '?0',
         'sec-ch-ua-platform': '"Windows"',
         'sec-fetch-dest': 'empty',
         'sec-fetch-mode': 'cors',
         'sec-fetch-site': 'same-origin',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
-        'x-xsrf-token': 'UMsT-QOB1bhM9hvwIBt0ysigEMcWpAaNWcyzEb2-yVKqw_SW7JRloGrN05lz_ixEoB29owPhxEw7LouvAYnf1CxNEn0etMcK64X3Vt4qdnJNF9mUdZ7zZvCSJ08uFKCBcEPFSNiadl6aknTdxHzCC_MPBilY4vBZySLR1SJG-gcRZY1LGsqn4V-xW_41'
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+        'x-xsrf-token': 'qTBtzPVmy7D-QBPPJ5N1P3qrhUAGLWuIGawzIk0wX1RNW20l2mHGKu3K8Xow0M03yWaYcJkoreoD0lDWr-NkjlBjt_i_v5T1SpIuLJrwSFZ7ht8e3g0mjMzSnnRAVutxxgICA36c-1_B4LLaVoawKZxprXQqs1xleyUqHVMsCvghTCVe5gDFqKV5R1Q1'
     }
 
     # Function to parse cookie string into dictionary
@@ -104,7 +104,7 @@ def save_to_csv(listings: List[Dict], filename: str = 'listings.csv'):
 
 def main():
     all_listings = []
-    page = 358  # Start from page 358
+    page = 1  # Start from page 358
     
     while True:
         print(f"Fetching page {page}...")
