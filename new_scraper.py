@@ -23,16 +23,18 @@ def get_listings(page: int = 1) -> Optional[Dict]:
         'x-xsrf-token': 'UMsT-QOB1bhM9hvwIBt0ysigEMcWpAaNWcyzEb2-yVKqw_SW7JRloGrN05lz_ixEoB29owPhxEw7LouvAYnf1CxNEn0etMcK64X3Vt4qdnJNF9mUdZ7zZvCSJ08uFKCBcEPFSNiadl6aknTdxHzCC_MPBilY4vBZySLR1SJG-gcRZY1LGsqn4V-xW_41'
     }
 
-    cookies = {
-        'UserSettingsCookie': 'screenSize=1920|919',
-        'sandhills-consent': '{"StrictlyNecessary":true,"Customization":false,"Advertising":false,"Analytics":false,"ShouldResync":true,"ActionDateTime":"2025-06-20T09:24:41.803Z","ConsentStatus":"DENY","WebAgreementID":165}',
-        '__RequestVerificationToken': 'p-34dOmgAm660j5p4GCSECaCCVEt7uOhkjIK8GXThETS0mdmw9oJnVXnRitKbkRIBcmmBw2',
-        '__XSRF-TOKEN': 'TSIxDDv3qFnGVmvIDFZtiWO2dpa8--gqYTCtlTRCeQnxrxsn-zaRWK8IgEebiq3106scyfi1rYGCE8UqZHqqjj4j1-mHDzOv1pTYlVnZh7uWhNuJWVoS8zdujax8CgsiDaCSn7Hg037eFbEZjf8XAbwCevmhkTWZ_VAckA2',
-        'ASP.NET_SessionId': 'imdpjjl2nb4hy2qneau2qcb5',
-        'reese84': '3:2G0sNU01E7hJeR532hd7BQ==:I+q88yHlxLnBEhS6b8vyF2Yg7jEg6OYXmORaRXnxQnYevghGKWB66D6ZTG71vEXW3jMNcvgOfalCxGo+qSlC05nb0sh9MhZR4gqzna6dRtb3gdNnDEOBaAa7//j+NpWCVcTXcPUTdJYCn/HBDN5B7Ys7obD4DcPpaqf2IieykcAHAtCO4gKzkHV2jk+tYJt6vtB1cTj+W1lMdpXeijWJ4YuxvqrAZxRQjRb7JIkCPpwrXFOK6BSQfQ72ovkA4MuXhuhPnKpmuabMuey0s38DyHsarW0jDYdhcHP6SF1NK3jwSu8bPirS1BZJtR8bydQf5uhZVefYqcuyYcIreM0GCfkDHIEkZgyg05FBf/GMPYGc24tGfvXHJG8uga1MtxtMm5uDOpOWDVUoC0/zznJy8DKW06xoyULgC4pga41RlIRcRk3icPk9FBACrcFo7TGlsoLZL1DIsm+OKrD1bLxE1k46HbWF6032gMAJMjScwdOS1VNtvUsfd9KVBeJo03U/FA73nEIcb+LQQOPsKlfQxw==:OxKHONbOX9CbeukfLTwtxaoUqelx9sge2Ibpc7H09yA=',
-        'UserID': 'ID=iiK%2fxlgqP0TtdwXUzhvhosgINh9yxpoThbivahn8catRQeov6QqXntOmSxpoTdKsY92RYeD5WeNKpZt8ZhtABg%3d%3d&LV=Irm0i7%2fOpca5CpBHT2RKoIJzGKrRFysDR%2fjbmGHM5dqZu9lTv8TuIMBcC8WX1hyApXy272cxdJYsbaA29ktcU83PlnjR5aJB',
-        'BIGipServerwww.truckpaper.tradesites_http_pool': '4265650368.20480.0000'
-    }
+    # Function to parse cookie string into dictionary
+    def parse_cookies(cookie_str):
+        cookies = {}
+        pairs = cookie_str.split(';')
+        for pair in pairs:
+            if '=' in pair:
+                key, value = pair.split('=', 1)
+                cookies[key.strip()] = value.strip()
+        return cookies
+
+    # Raw cookie string
+    cookie_str = 'UserSettingsCookie=screenSize=1920|919; reese84=3:SAqMoht065PGqPreIU6nUg==:xFxGA4tTlzafEeIp0ZuqV7zt3saIvonVRzwOibpVNq4kAShwg48tXVZj8RJPA8P2D3Ubr6XFlqAgOOz2qz5uKcB2rPFWJuzAMv9VMmaT40DNR2BPPhKtbam7uvZjrRIVazw2C/tCCRitY/j/VpgOwlrqkwlbcKW40SDy1w5PqccaibM4vdwM4mLNW5axSRayXlubTjzy+0rUzmDTg72a8FP0c274TqJzKreuVPeNTw/M9rRRZmXv5YDmLnsBmhgquLVaCGTnwgmysOVBSy9R8IostQteDC8QTtsZVbQblNqmD63Im7itU8mU6DBomcGrh8TSEeFQScIKwmLgWYGqGPVeRFq5lG9nk3r2salK08lVh0gM0b2hgTXA4vOPN7RD7a23JAwg75OPp+aDCrRORG+3TnBzOhZWY8UidMmpTN9KpQUGit0N6MBIew94WAaEgdb+ECtvmQMe9xh5ExAKc1WkL0VoXp/3MzKIV4TG8KtwxkROQVb8rozTzLtbqXh943WnWj3v4c/vJ6opjzad3g==:JvQT/EftCXyhcPuFlRyYEQKo9XjAkyxhl+HWnxv13Jg=; UserID=ID=iiK%2fxlgqP0TtdwXUzhvhosgINh9yxpoThbivahn8catRQeov6QqXntOmSxpoTdKsY92RYeD5WeNKpZt8ZhtABg%3d%3d&LV=eLb7QIw%2fod8KJdD%2bskaHT7Cq69UGV%2bX7pnI7YkCMnXyekPOVcnLlUY3DAdsJZ0ufN8Tn3Jt2CH1gAAeN7yHiNdS4MqnzTIxg; __RequestVerificationToken=3UlC9clBXf2cjfg9tOvlR7HHnoPqZM5vbAuFNT9kRZ2Egi3Ab_lefJ1wzEzfkauDw75ThQ2; __XSRF-TOKEN=zI-XmdNdHgylHLx5rTCYlrB22Ph4l7soRPMZMcRVRtAxDPKAszb2BSNn7z3JYZYilSiKVbs74-kKF3jS2XpyyeFlliqnp5frqmpu4fvgcjw7stCkKh5uXrAW2LWekhoSk864XZ1J9oUeLX3zuIF4W3OF12bgl5Znc1wpRQ2; BIGipServerwww.truckpaper.tradesites_http_pool=759343296.20480.0000; sandhills-consent={"StrictlyNecessary":true,"Customization":false,"Advertising":false,"Analytics":false,"ShouldResync":true,"ActionDateTime":"2025-07-21T02:36:45.618Z","ConsentStatus":"DENY","WebAgreementID":165}'
 
     params = {
         'ListingType': 'For Retail',
@@ -42,7 +44,7 @@ def get_listings(page: int = 1) -> Optional[Dict]:
     }
 
     try:
-        response = requests.get(url, headers=headers, params=params, cookies=cookies)
+        response = requests.get(url, headers=headers, params=params, cookies=parse_cookies(cookie_str))
         response.raise_for_status()
         
         # Save raw response for debugging (optional)
